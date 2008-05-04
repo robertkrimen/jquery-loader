@@ -5,7 +5,7 @@ use strict;
 
 =head1 NAME
 
-JS::jQuery::Loader -
+JS::jQuery::Loader - Load (and cache) the jQuery JavaScript library
 
 =head1 VERSION
 
@@ -23,6 +23,55 @@ use constant JQUERY_VERSION => "1.2.3";
 
 =head1 SYNOPSIS
 
+    use JS::jQuery::Loader;
+
+    my $loader = JS::jQuery::Loader->new_from_internet;
+    print $loader->html;
+
+    # The above will yield:
+    # <script src="http://jqueryjs.googlecode.com/files/jquery-1.2.3.js">
+
+You can also cache jQuery locally:
+
+    my $loader = JS::jQuery::Loader->new_from_internet(cache => { dir => "htdocs/assets/\%l", uri => "http://localhost/assets/\%l" });
+    print $loader->html;
+
+    # The above will yield:
+    # <script src="http://localhost/assets/jquery-1.2.3.js">
+
+=head1 DESCRIPTION
+
+JS::jQuery::Loader is a tool for fetching and serving the jQuery JavaScript library. Using this package you can download jQuery
+directly from L<http://code.google.com/p/jqueryjs/>, cache it locally, and serve it from a URI within your application.
+
+=head1 Specifying URI/file locations for the jQuery .js asset
+
+90% of the time, you should be able to get by by specifying an absolute URI/file location. Something like this, for example:
+
+    JS::jQuery::Loader->new_from_internet(cache => { uri => "http://localhost/assets/jquery.js", file => "htdocs/assets/jquery.js" })
+
+However, if you want more control over the path (like specifying filter/version information, you can use the following conversion specifications:
+
+    %l          The value of the location parameter as passed to the cache constructor
+                You can use this to specify a path common to both the uri-part and file-part of the cache
+                The location parameter value can also include %j, %v, $f, etc.
+
+    %j          Equivalent to "jquery%-v%.f.js"
+
+    %v          The number of the version jQuery being used (e.g. "1.2.3")
+    %[./-]v     Preceding %v with a ., /, or - will put that same character in
+                front of the number, or a nothing for the whole specification if no version is given
+
+    %f          The name of the filter being used (e.g. "min")
+    %[./-]f     Preceding %f with a ., /, or - will put that same character in
+                front of the filter, or a nothing for the whole specification if no filter is in use
+
+Here is an example:
+
+    location => "js/jq%-v.js"           # js/jq-1.2.3.js
+    uri => "http://localhost/assets/%l" # http://localhost/assets/js/jq-1.2.3.js
+    file => "./htdocs/static/%l"        # ./htdocs/static/js/jq-1.2.3.js
+
 =cut
 
 use Moose;
@@ -37,9 +86,11 @@ has template => qw/is ro required 1 lazy 1 isa JS::jQuery::Loader::Template/, de
 has source => qw/is ro required 1 isa JS::jQuery::Loader::Source/;
 has cache => qw/is ro isa JS::jQuery::Loader::Cache/;
 
-=head2 JS::jQuery::Loader->new_from_internet( version => <version> )
+=head1 METHODS
 
-Return a new JS::jQuery::Loader object configured to serve/fetch the jQuery .js asset from from http://yui.yahooapis.com/<version>
+=head2 JS::jQuery::Loader->new_from_internet([ version => <version>, cache => <cache> ])
+
+Return a new JS::jQuery::Loader object configured to serve/fetch the jQuery .js asset from from the Internet (currently L<http://jqueryjs.googlecode.com/files/jquery-1.2.3.js>)
 
 =cut
 
@@ -56,13 +107,13 @@ sub new_from_internet {
     return $class->_new_finish($given, $source);
 }
 
-=head2 JS::jQuery::Loader->new_from_uri( uri => <uri> )
+=head2 JS::jQuery::Loader->new_from_uri([ uri => <uri>, cache => <cache> ])
 
 Return a new JS::jQuery::Loader object configured to serve/fetch the jQuery .js asset from an arbitrary uri
 
-As an example, for a base of C<http://example.com/assets>, the C<reset.css> asset should be available as:
+As an example, for a <uri> of C<http://localhost/assets/%l>, the jQuery asset uri should be
 
-    http://example.com/assets/reset.css
+    http://localhost/assets/jquery-1.2.3.js
 
 =cut
 
@@ -79,13 +130,13 @@ sub new_from_uri {
     return $class->_new_finish($given, $source);
 }
 
-=head2 JS::jQuery::Loader->new_from_file( file => <file> )
+=head2 JS::jQuery::Loader->new_from_file([ file => <file>, cache => <cache> ])
 
 Return a new JS::jQuery::Loader object configured to fetch/serve the jQuery .js asset from an arbitrary file
 
-As an example, for a dir of C<./assets>, the C<reset.css> asset should be available as:
+As an example, for a file of C<./assets/%l>, the jQuery asset file should be
 
-    ./assets/reset.css
+    ./assets/jquery-1.2.3.js
 
 =cut
 
@@ -147,7 +198,7 @@ sub version {
     $self->source->recalculate;
 }
 
-=head2 filter_min 
+=head2 $loader->filter_min 
 
 Use the .min version of jQuery
 
@@ -159,7 +210,7 @@ sub filter_min {
     return $self;
 }
 
-=head2 no_filter 
+=head2 $loader->no_filter 
 
 Disable filtering of included components (do not use the .min version)
 
@@ -171,7 +222,7 @@ sub no_filter {
     return $self;
 }
 
-=head2 uri
+=head2 $loader->uri
 
 Attempt to fetch a L<URI> for jQuery using the current filter setting of the loader (.min, etc.)
 
@@ -185,7 +236,7 @@ sub uri {
     return $self->source_uri(@_);
 }
 
-=head2 file
+=head2 $loader->file
 
 Attempt to fetch a L<Path::Class::File> for jQuery using the current filter setting of the loader (.min, etc.)
 
@@ -199,7 +250,7 @@ sub file {
     return $self->source_file(@_);
 }
 
-=head2 cache_uri
+=head2 $loader->cache_uri
 
 Attempt to fetch a L<URI> for jQuery using the current filter setting of the loader (.min, etc.) from the cache
 
@@ -211,7 +262,7 @@ sub cache_uri {
     return $self->cache->uri || croak "Unable to get uri from cache ", $self->cache;
 }
 
-=head2 cache_file
+=head2 $loader->cache_file
 
 Attempt to fetch a L<Path::Class::File> for jQuery using the current filter setting of the loader (.min, etc.) from the cache
 
@@ -223,7 +274,7 @@ sub cache_file {
     return $self->cache->file || croak "Unable to get file for from cache ", $self->cache;
 }
 
-=head2 source_uri
+=head2 $loader->source_uri
 
 Attempt to fetch a L<URI> for jQuery using the current filter setting of the loader (.min, etc.) from the source
 
@@ -235,7 +286,7 @@ sub source_uri {
     return $self->source->uri || croak "Unable to get uri for from source ", $self->source;
 }
 
-=head2 source_file
+=head2 $loader->source_file
 
 Attempt to fetch a L<Path::Class::File> for jQuery using the current filter setting of the loader (.min, etc.) from the source
 
@@ -253,7 +304,7 @@ sub _html {
     return SCRIPT({ type => "text/javascript", src => $uri, _ => "" });
 }
 
-=head2 html
+=head2 $loader->html
 
 Generate and return a string containing HTML describing how to include components. For example, you can use this in the <head> section
 of a web page.
@@ -262,14 +313,7 @@ If the loader has a cache, then it will attempt to generate URIs from the cache,
 
 Here is an example:
 
-    <link rel="stylesheet" href="http://example.com/assets/reset.css" type="text/css"/>
-    <link rel="stylesheet" href="http://example.com/assets/fonts.css" type="text/css"/>
-    <link rel="stylesheet" href="http://example.com/assets/base.css" type="text/css"/>
-    <script src="http://example.com/assets/yahoo.js" type="text/javascript"></script>
-    <script src="http://example.com/assets/dom.js" type="text/javascript"></script>
-    <script src="http://example.com/assets/event.js" type="text/javascript"></script>
-    <script src="http://example.com/assets/logger.js" type="text/javascript"></script>
-    <script src="http://example.com/assets/yuitest.js" type="text/javascript"></script>
+    <script src="http://localhost/assets/jquery-1.2.3.js" type="text/javascript"></script>
 
 =cut
 
@@ -278,21 +322,14 @@ sub html {
     return $self->_html($self->uri);
 }
 
-=head2 source_html
+=head2 $loader->source_html
 
 Generate and return a string containing HTML describing how to include components. For example, you can use this in the <head> section
 of a web page.
 
 Here is an example:
 
-    <link rel="stylesheet" href="http://example.com/assets/reset.css" type="text/css"/>
-    <link rel="stylesheet" href="http://example.com/assets/fonts.css" type="text/css"/>
-    <link rel="stylesheet" href="http://example.com/assets/base.css" type="text/css"/>
-    <script src="http://example.com/assets/yahoo.js" type="text/javascript"></script>
-    <script src="http://example.com/assets/dom.js" type="text/javascript"></script>
-    <script src="http://example.com/assets/event.js" type="text/javascript"></script>
-    <script src="http://example.com/assets/logger.js" type="text/javascript"></script>
-    <script src="http://example.com/assets/yuitest.js" type="text/javascript"></script>
+    <script src="http://localhost/assets/jquery-1.2.3.js" type="text/javascript"></script>
 
 =cut
 
@@ -374,6 +411,16 @@ sub _new_finish {
 =head1 AUTHOR
 
 Robert Krimen, C<< <rkrimen at cpan.org> >>
+
+=head1 SEE ALSO
+
+L<http://jquery.com/>
+
+L<http://code.google.com/p/jqueryjs/>
+
+L<JS::jQuery>
+
+L<JS::YUI::Loader>
 
 =head1 BUGS
 

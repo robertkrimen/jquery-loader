@@ -17,14 +17,12 @@ inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 lib/JS/jQuery/Loader/Cache.pm
-lib/JS/jQuery/Loader/Cache/.URI.pm.swp
 lib/JS/jQuery/Loader/Cache/File.pm
 lib/JS/jQuery/Loader/Cache/URI.pm
 lib/JS/jQuery/Loader/Carp.pm
 lib/JS/jQuery/Loader/Location.pm
 lib/JS/jQuery/Loader/Source.pm
 lib/JS/jQuery/Loader/Source/File.pm
-lib/JS/jQuery/Loader/Source/Google.pm
 lib/JS/jQuery/Loader/Source/Internet.pm
 lib/JS/jQuery/Loader/Source/URI.pm
 lib/JS/jQuery/Loader/Template.pm

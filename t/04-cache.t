@@ -20,7 +20,6 @@ ok($cache);
 
 is($cache->uri, "http://example.com/t/jquery-1.2.3.js");
 
-
 SKIP: {
     $ENV{TEST_RELEASE} or skip "Not testing going out to the Internet ($uri)";
     
@@ -39,4 +38,16 @@ SKIP: {
 
     $cache->recalculate;
     is($cache->uri, "http://example.com/t/jquery.js");
+
+    $template->version("1.2.3");
+    $cache = JS::jQuery::Loader::Cache::URI->new(source => $source, template => $template,
+        location => "js/jq\%-v.js",
+        uri => "http://localhost/assets/\%l",
+        file => $base->file("htdocs/static/\%l"),
+
+    );
+    is($cache->location->location, "js/jq-1.2.3.js");
+    is($cache->file, $base->file("htdocs/static/js/jq-1.2.3.js"));
+    is($cache->uri, "http://localhost/assets/js/jq-1.2.3.js");
+
 }
