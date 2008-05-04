@@ -18,11 +18,10 @@ my $source = JS::jQuery::Loader::Source::URI->new(template => $template, uri => 
 my $cache = JS::jQuery::Loader::Cache::URI->new(source => $source, file => "$base/\%j", uri => "http://example.com/t/\%j");
 ok($cache);
 
-is($cache->uri, "http://example.com/t/jquery-1.2.3.js");
-
 SKIP: {
     $ENV{TEST_RELEASE} or skip "Not testing going out to the Internet ($uri)";
     
+    is($cache->uri, "http://example.com/t/jquery-1.2.3.js");
     is($cache->file, file "jquery-1.2.3.js");
 
     $cache = JS::jQuery::Loader::Cache::URI->new(source => $source, file => "$base/\%l", uri => "http://example.com/t/\%l");
