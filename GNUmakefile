@@ -11,7 +11,7 @@ distclean tardist: Makefile
 	$(MAKE) -f $< $@
 
 test: Makefile
-	TEST_RELEASE= $(MAKE) -f $< $@
+	TEST_RELEASE=1 $(MAKE) -f $< $@
 
 Makefile: Makefile.PL
 	perl $<

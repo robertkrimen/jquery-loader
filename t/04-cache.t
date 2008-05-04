@@ -1,0 +1,42 @@
+use strict;
+use warnings;
+
+use Test::More;
+use Test::Deep;
+plan qw/no_plan/;
+use Directory::Scratch;
+my $scratch = Directory::Scratch->new;
+my $base = $scratch->base;
+sub file { return $base->file(@_) }
+
+use JS::jQuery::Loader::Source::URI;
+use JS::jQuery::Loader::Cache::URI;
+
+my $template = JS::jQuery::Loader::Template->new(version => "1.2.3");
+my $uri = "http://jqueryjs.googlecode.com/files/\%j";
+my $source = JS::jQuery::Loader::Source::URI->new(template => $template, uri => $uri);
+my $cache = JS::jQuery::Loader::Cache::URI->new(source => $source, file => "$base/\%j", uri => "http://example.com/t/\%j");
+ok($cache);
+
+is($cache->uri, "http://example.com/t/jquery-1.2.3.js");
+
+
+SKIP: {
+    $ENV{TEST_RELEASE} or skip "Not testing going out to the Internet ($uri)";
+    
+    is($cache->file, file "jquery-1.2.3.js");
+
+    $cache = JS::jQuery::Loader::Cache::URI->new(source => $source, file => "$base/\%l", uri => "http://example.com/t/\%l");
+
+    is($cache->uri, "http://example.com/t/jquery-1.2.3.js");
+    is($cache->file, file "jquery-1.2.3.js");
+    ok(-s $cache->file);
+
+    $cache->uri("http://example.com/t\%/v/\%j");
+    is($cache->uri, "http://example.com/t/1.2.3/jquery-1.2.3.js");
+
+    $template->version(undef);
+
+    $cache->recalculate;
+    is($cache->uri, "http://example.com/t/jquery.js");
+}
