@@ -13,13 +13,13 @@ Version 0.01
 
 =head1 jQuery VERSION
 
-Version 1.2.3
+Version 1.2.6
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
-use constant JQUERY_VERSION => "1.2.3";
+use constant JQUERY_VERSION => "1.2.6";
 
 =head1 SYNOPSIS
 
@@ -29,7 +29,14 @@ use constant JQUERY_VERSION => "1.2.3";
     print $loader->html;
 
     # The above will yield:
-    # <script src="http://jqueryjs.googlecode.com/files/jquery-1.2.3.js">
+    # <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.js" type="text/javascript"></script>
+
+
+    # If you need the minified version, you can use the following:
+    $loader = JS::jQuery::Loader->new_from_internet(filter => "min");
+
+    # Which will yield:
+    # <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js" type="text/javascript"></script> 
 
 You can also cache jQuery locally:
 
@@ -37,7 +44,7 @@ You can also cache jQuery locally:
     print $loader->html;
 
     # The above will yield:
-    # <script src="http://localhost/assets/jquery-1.2.3.js">
+    # <script src="http://localhost/assets/jquery-1.2.6.js">
 
 =head1 DESCRIPTION
 
@@ -58,7 +65,7 @@ However, if you want more control over the path (like specifying filter/version 
 
     %j          Equivalent to "jquery%-v%.f.js"
 
-    %v          The number of the version jQuery being used (e.g. "1.2.3")
+    %v          The number of the version jQuery being used (e.g. "1.2.6")
     %[./-]v     Preceding %v with a ., /, or - will put that same character in
                 front of the number, or a nothing for the whole specification if no version is given
 
@@ -68,9 +75,9 @@ However, if you want more control over the path (like specifying filter/version 
 
 Here is an example:
 
-    location => "js/jq%-v.js"           # js/jq-1.2.3.js
-    uri => "http://localhost/assets/%l" # http://localhost/assets/js/jq-1.2.3.js
-    file => "./htdocs/static/%l"        # ./htdocs/static/js/jq-1.2.3.js
+    location => "js/jq%-v.js"           # js/jq-1.2.6.js
+    uri => "http://localhost/assets/%l" # http://localhost/assets/js/jq-1.2.6.js
+    file => "./htdocs/static/%l"        # ./htdocs/static/js/jq-1.2.6.js
 
 =cut
 
@@ -90,7 +97,7 @@ has cache => qw/is ro isa JS::jQuery::Loader::Cache/;
 
 =head2 JS::jQuery::Loader->new_from_internet([ version => <version>, cache => <cache> ])
 
-Return a new JS::jQuery::Loader object configured to serve/fetch the jQuery .js asset from from the Internet (currently L<http://jqueryjs.googlecode.com/files/jquery-1.2.3.js>)
+Return a new JS::jQuery::Loader object configured to serve/fetch the jQuery .js asset from from the Internet (currently L<http://jqueryjs.googlecode.com/files/jquery-1.2.6.js>)
 
 =cut
 
@@ -113,7 +120,7 @@ Return a new JS::jQuery::Loader object configured to serve/fetch the jQuery .js 
 
 As an example, for a <uri> of C<http://localhost/assets/%l>, the jQuery asset uri should be
 
-    http://localhost/assets/jquery-1.2.3.js
+    http://localhost/assets/jquery-1.2.6.js
 
 =cut
 
@@ -136,7 +143,7 @@ Return a new JS::jQuery::Loader object configured to fetch/serve the jQuery .js 
 
 As an example, for a file of C<./assets/%l>, the jQuery asset file should be
 
-    ./assets/jquery-1.2.3.js
+    ./assets/jquery-1.2.6.js
 
 =cut
 
@@ -187,7 +194,7 @@ This will also change the filename of the jQuery asset (unless the source/cache 
 
 By default, the latest version is used:
 
-    $loader->version("1.2.3");
+    $loader->version("1.2.6");
 
 =cut
 
@@ -313,7 +320,7 @@ If the loader has a cache, then it will attempt to generate URIs from the cache,
 
 Here is an example:
 
-    <script src="http://localhost/assets/jquery-1.2.3.js" type="text/javascript"></script>
+    <script src="http://localhost/assets/jquery-1.2.6.js" type="text/javascript"></script>
 
 =cut
 
@@ -329,7 +336,7 @@ of a web page.
 
 Here is an example:
 
-    <script src="http://localhost/assets/jquery-1.2.3.js" type="text/javascript"></script>
+    <script src="http://localhost/assets/jquery-1.2.6.js" type="text/javascript"></script>
 
 =cut
 

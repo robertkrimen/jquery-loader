@@ -15,13 +15,13 @@ my $loader = JS::jQuery::Loader->new_from_internet(cache => $base);
 ok($loader);
 SKIP: {
     $ENV{TEST_RELEASE} or skip "Not testing going out to the Internet";
-    is($loader->file, file "jquery-1.2.3.js");
+    is($loader->file, file "jquery-1.2.6.js");
 }
 $loader->filter_min;
 SKIP: {
     $ENV{TEST_RELEASE} or skip "Not testing going out to the Internet";
     $loader->filter_min;
-    is($loader->file, file "jquery-1.2.3.min.js");
+    is($loader->file, file "jquery-1.2.6.min.js");
 }
 
 ok(JS::jQuery::Loader->new_from_internet);
