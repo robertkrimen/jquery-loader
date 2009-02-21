@@ -3,6 +3,8 @@ use inc::Module::Install;
 name 'JS-jQuery-Loader';
 all_from 'lib/JS/jQuery/Loader.pm';
 
+resources repository => 'http://github.com/robertkrimen/jquery-loader/tree/master';
+
 {
     require ExtUtils::MakeMaker;
     use strict;
