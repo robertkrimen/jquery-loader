@@ -3,10 +3,26 @@ use inc::Module::Install;
 name 'JS-jQuery-Loader';
 all_from 'lib/JS/jQuery/Loader.pm';
 
-build_requires 'Test::More';
-build_requires 'Directory::Scratch';
+{
+    require ExtUtils::MakeMaker;
+    use strict;
+    no strict 'refs';
 
-for (split m/\n/, <<_END_) {
+    my $libscan = \&{"ExtUtils::MM_Any::libscan"};
+    *{"ExtUtils::MM_Any::libscan"} = sub {
+        return '' unless $libscan->(@_);
+        return '' if $_[1] =~ /\.sw[p-z]$/;
+        return $_[1];
+    };
+}
+
+{
+    map { my ($pk, $vr) = split m/\s/; build_requires $pk => $vr || 0 } grep { ! /^\s*#/ } split m/\n/, <<_END_;
+Test::Most
+Directory::Scratch
+_END_
+
+    map { my ($pk, $vr) = split m/\s/; requires $pk => $vr || 0 } grep { ! /^\s*#/ } split m/\n/, <<_END_;
 Carp::Clan::Share
 File::Copy
 HTML::Declare
@@ -16,9 +32,13 @@ Path::Abstract
 Path::Class
 URI
 _END_
-    my ($module, $version) = split m/\s+/, $_;
-    requires $module, $version;
 }
+
+if (-e 'inc/.author') {
+    my $all_from = join '/', 'lib', split m/-/, name . '.pm';
+    `perldoc -tF $all_from > README` if ! -e 'README' || (stat $all_from)[9] > (stat 'README')[9];
+}
+
 
 auto_install;
 
