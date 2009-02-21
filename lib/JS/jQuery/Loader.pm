@@ -24,17 +24,24 @@ _END_
 
 use jQuery::Loader;
 
+sub import {
+    _deprecation_warning;
+}
+
 sub new_from_internet {
+    _deprecation_warning;
     shift;
     jQuery::Loader->new_from_internet(@_);
 }
 
 sub new_from_uri {
+    _deprecation_warning;
     shift;
     jQuery::Loader->new_from_uri(@_);
 }
 
 sub new_from_file {
+    _deprecation_warning;
     shift;
     jQuery::Loader->new_from_file(@_);
 }
