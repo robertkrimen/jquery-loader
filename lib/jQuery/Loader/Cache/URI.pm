@@ -1,8 +1,8 @@
-package JS::jQuery::Loader::Cache::URI;
+package jQuery::Loader::Cache::URI;
 
 use Moose;
-extends qw/JS::jQuery::Loader::Cache::File/;
-use JS::jQuery::Loader::Carp;
+extends qw/jQuery::Loader::Cache::File/;
+use jQuery::Loader::Carp;
 
 use Path::Abstract;
 
@@ -29,7 +29,7 @@ sub BUILD {
 
         $file = "$file/\%l" if -d $file; # TODO Moar checking, Path::Class::Dir, etc.
 
-        JS::jQuery::Loader::Location->new(template => $self->template, file => $file, uri => $uri, location => $location);
+        jQuery::Loader::Location->new(template => $self->template, file => $file, uri => $uri, location => $location);
     }
     unless blessed $location;
 }

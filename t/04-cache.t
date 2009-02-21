@@ -9,13 +9,13 @@ my $scratch = Directory::Scratch->new;
 my $base = $scratch->base;
 sub file { return $base->file(@_) }
 
-use JS::jQuery::Loader::Source::URI;
-use JS::jQuery::Loader::Cache::URI;
+use jQuery::Loader::Source::URI;
+use jQuery::Loader::Cache::URI;
 
-my $template = JS::jQuery::Loader::Template->new(version => "1.2.3");
+my $template = jQuery::Loader::Template->new(version => "1.2.3");
 my $uri = "http://jqueryjs.googlecode.com/files/\%j";
-my $source = JS::jQuery::Loader::Source::URI->new(template => $template, uri => $uri);
-my $cache = JS::jQuery::Loader::Cache::URI->new(source => $source, file => "$base/\%j", uri => "http://example.com/t/\%j");
+my $source = jQuery::Loader::Source::URI->new(template => $template, uri => $uri);
+my $cache = jQuery::Loader::Cache::URI->new(source => $source, file => "$base/\%j", uri => "http://example.com/t/\%j");
 ok($cache);
 
 SKIP: {
@@ -24,7 +24,7 @@ SKIP: {
     is($cache->uri, "http://example.com/t/jquery-1.2.3.js");
     is($cache->file, file "jquery-1.2.3.js");
 
-    $cache = JS::jQuery::Loader::Cache::URI->new(source => $source, file => "$base/\%l", uri => "http://example.com/t/\%l");
+    $cache = jQuery::Loader::Cache::URI->new(source => $source, file => "$base/\%l", uri => "http://example.com/t/\%l");
 
     is($cache->uri, "http://example.com/t/jquery-1.2.3.js");
     is($cache->file, file "jquery-1.2.3.js");
@@ -39,7 +39,7 @@ SKIP: {
     is($cache->uri, "http://example.com/t/jquery.js");
 
     $template->version("1.2.3");
-    $cache = JS::jQuery::Loader::Cache::URI->new(source => $source, template => $template,
+    $cache = jQuery::Loader::Cache::URI->new(source => $source, template => $template,
         location => "js/jq\%-v.js",
         uri => "http://localhost/assets/\%l",
         file => $base->file("htdocs/static/\%l"),

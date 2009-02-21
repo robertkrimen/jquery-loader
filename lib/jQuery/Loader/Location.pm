@@ -1,14 +1,14 @@
-package JS::jQuery::Loader::Location;
+package jQuery::Loader::Location;
 
 use Moose;
-extends qw/JS::jQuery::Loader::Source/;
-use JS::jQuery::Loader::Carp;
+extends qw/jQuery::Loader::Source/;
+use jQuery::Loader::Carp;
 
-use JS::jQuery::Loader::Template;
+use jQuery::Loader::Template;
 use Path::Class;
 use URI;
 
-has template => qw/is ro required 1 lazy 1 isa JS::jQuery::Loader::Template/, default => sub { return JS::jQuery::Loader::Template->new };
+has template => qw/is ro required 1 lazy 1 isa jQuery::Loader::Template/, default => sub { return jQuery::Loader::Template->new };
 
 has location_pattern => qw/is rw/, default => "\%j";
 has file_pattern => qw/is rw/;

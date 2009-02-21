@@ -1,4 +1,4 @@
-package JS::jQuery::Loader::Template;
+package jQuery::Loader::Template;
 
 use strict;
 use warnings;

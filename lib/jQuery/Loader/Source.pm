@@ -1,4 +1,4 @@
-package JS::jQuery::Loader::Source;
+package jQuery::Loader::Source;
 
 use Moose;
 

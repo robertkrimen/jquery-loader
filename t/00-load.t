@@ -3,7 +3,7 @@
 use Test::More tests => 1;
 
 BEGIN {
-	use_ok( 'JS::jQuery::Loader' );
+	use_ok( 'jQuery::Loader' );
 }
 
-diag( "Testing JS::jQuery::Loader $JS::jQuery::Loader::VERSION, Perl $], $^X" );
+diag( "Testing jQuery::Loader $jQuery::Loader::VERSION, Perl $], $^X" );

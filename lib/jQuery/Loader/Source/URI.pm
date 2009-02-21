@@ -1,14 +1,14 @@
-package JS::jQuery::Loader::Source::URI;
+package jQuery::Loader::Source::URI;
 
 use Moose;
-extends qw/JS::jQuery::Loader::Source/;
-use JS::jQuery::Loader::Carp;
+extends qw/jQuery::Loader::Source/;
+use jQuery::Loader::Carp;
 
-use JS::jQuery::Loader::Location;
-use JS::jQuery::Loader::Template;
+use jQuery::Loader::Location;
+use jQuery::Loader::Template;
 
 has location => qw/is ro/, handles => [qw/recalculate uri/];
-has template => qw/is ro required 1 lazy 1 isa JS::jQuery::Loader::Template/, default => sub { return JS::jQuery::Loader::Template->new };
+has template => qw/is ro required 1 lazy 1 isa jQuery::Loader::Template/, default => sub { return jQuery::Loader::Template->new };
 
 sub BUILD {
     my $self = shift;
@@ -19,7 +19,7 @@ sub BUILD {
 
         croak "Wasn't given a URI" unless $given->{uri};
 
-        JS::jQuery::Loader::Location->new(template => $self->template, uri => $given->{uri}, location => $location);
+        jQuery::Loader::Location->new(template => $self->template, uri => $given->{uri}, location => $location);
 
     }
     unless blessed $location;

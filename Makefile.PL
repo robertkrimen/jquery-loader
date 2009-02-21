@@ -1,7 +1,7 @@
 use inc::Module::Install;
 
-name 'JS-jQuery-Loader';
-all_from 'lib/JS/jQuery/Loader.pm';
+name 'jQuery-Loader';
+all_from 'lib/jQuery/Loader.pm';
 
 resources repository => 'http://github.com/robertkrimen/jquery-loader/tree/master';
 
@@ -41,6 +41,7 @@ if (-e 'inc/.author') {
     `perldoc -tF $all_from > README` if ! -e 'README' || (stat $all_from)[9] > (stat 'README')[9];
 }
 
+tests_recursive;
 
 auto_install;
 

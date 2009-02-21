@@ -5,12 +5,12 @@ use Test::More;
 use Test::Deep;
 plan qw/no_plan/;
 
-use JS::jQuery::Loader::Template;
-use JS::jQuery::Loader::Source::URI;
+use jQuery::Loader::Template;
+use jQuery::Loader::Source::URI;
 
 my $uri = "http://jqueryjs.googlecode.com/files/\%j";
-my $template = JS::jQuery::Loader::Template->new;
-my $source = JS::jQuery::Loader::Source::URI->new(template => $template, uri => $uri);
+my $template = jQuery::Loader::Template->new;
+my $source = jQuery::Loader::Source::URI->new(template => $template, uri => $uri);
 
 is($source->uri, "http://jqueryjs.googlecode.com/files/jquery.js");
 

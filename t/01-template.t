@@ -5,9 +5,9 @@ use Test::More;
 use Test::Deep;
 plan qw/no_plan/;
 
-use JS::jQuery::Loader::Template;
+use jQuery::Loader::Template;
 
-my $template = JS::jQuery::Loader::Template->new;
+my $template = jQuery::Loader::Template->new;
 
 is($template->process("\%j"), "jquery.js");
 
