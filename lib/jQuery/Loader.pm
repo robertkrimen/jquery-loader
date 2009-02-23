@@ -9,7 +9,7 @@ jQuery::Loader - Load (and cache) the jQuery JavaScript library
 
 =head1 VERSION
 
-Version 0.02_1
+Version 0.03
 
 =head1 jQuery VERSION
 
@@ -17,7 +17,7 @@ Version 1.2.6
 
 =cut
 
-our $VERSION = '0.02_1';
+our $VERSION = '0.03';
 
 use constant JQUERY_VERSION => "1.2.6";
 
